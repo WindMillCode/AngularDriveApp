@@ -31,7 +31,7 @@ export const environment: any = {
 	googleDrive: {
 		// insert credentials here
 		apiKey: "AIzaSyAPkvxNBojMDfVXgFVScqcR_2XJwsE_9NY",
-		clientId: "637621663480-u9jk0epf7ir0ua1pqsk1kute7vv4tl90.apps.googleusercontent.com"
+		clientId: "637621663480-q40l4jmp84qso2ibumb8iop2asksag8r.apps.googleusercontent.com"
 		//
 	},
 	playground: {
@@ -74,6 +74,13 @@ export const environment: any = {
 		drive:false,
 		gSuite:false,
 		partial:true
+	},
+	//
+
+	// replace search object here
+	search:{
+		all:false,
+		query:true
 	},
 	//
 };

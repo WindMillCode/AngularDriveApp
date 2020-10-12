@@ -7,11 +7,11 @@ import { environment } from '../../environments/environment'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Directive({
-    selector: '[appDownload]'
+    selector: '[appSearch]'
 })
-export class DownloadDirective {
+export class SearchDirective {
 
-    @Input() download: any;
+    @Input() search: any;
     extras: any;
 
     constructor(
@@ -20,7 +20,6 @@ export class DownloadDirective {
         private renderer: Renderer2,
         private ryber: RyberService
     ) { }
-
 
     @HostListener('click') onClick() {
 
@@ -47,11 +46,10 @@ export class DownloadDirective {
 
     }
 
-
     ngOnInit() {
-        this.extras = this.download
+        this.extras = this.search
         if (this.extras?.confirm === 'true') {
-            console.log(environment.download)
+            console.log(environment.search)
             setTimeout(() => {
                 // this.el.nativeElement.click()
             }, 200)
@@ -72,6 +70,5 @@ export class DownloadDirective {
 }
 
 
-// get our files
 
-//
+
