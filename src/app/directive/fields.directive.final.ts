@@ -7,11 +7,11 @@ import { environment } from '../../environments/environment'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Directive({
-    selector: '[appSearch]'
+    selector: '[appFields]'
 })
-export class SearchDirective {
+export class FieldsDirective {
 
-    @Input() search: any;
+    @Input() fields: any;
     extras: any;
 
     constructor(
@@ -21,7 +21,9 @@ export class SearchDirective {
         private ryber: RyberService
     ) { }
 
+
     @HostListener('click') onClick() {
+
 
         if (this.extras?.confirm === 'true') {
 
@@ -34,12 +36,10 @@ export class SearchDirective {
             var SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
             //
 
-
             //scope access
             let http = this.http
             let ryber = this.ryber
             //
-
 
             // load the auth SDK
             gapi.load('client:auth2', () => {
@@ -57,56 +57,94 @@ export class SearchDirective {
                     }
                     //
 
+                    //fields fn
+                    let getFields  =(devObj?)=>{
+                        let headers = new HttpHeaders()
+                        headers = headers
+                            .set("Authorization", `Bearer ${gapi.auth.getToken().access_token}`)
+
+                        http.get(
+                            "https://www.googleapis.com/drive/v3/files",
+                            {
+                                headers,
+                                observe: 'response',
+                                params:{
+                                    fields:devObj.fields
+                                }
+                            }
+                        )
+                        .subscribe((result: any) => {
+                            console.log(result.body.files[0])
+
+                        })
+                    }
+                    //
+
 
                     //get a list of all files
-                    if(environment.search.all){
+                    if(environment.fields.all){
 
-                        let headers = new HttpHeaders()
-                        headers = headers
-                            .set("Authorization", `Bearer ${gapi.auth.getToken().access_token}`)
-
-                        http.get(
-                            "https://www.googleapis.com/drive/v3/files",
-                            {
-                                headers,
-                                observe: 'response',
-                                params:{
-                                    fields:"files(parents,id,name)"
-                                }
-                            }
-                        )
-                        .subscribe((result: any) => {
-                            console.log(result.body)
-
+                        getFields({
+                            fields:"*"
                         })
+
                     }
                     //
 
-                    //search for specific files or folders
-                    if(environment.search.query){
+                    //get a single field for a file
+                    if(environment.fields.single){
 
-                        let headers = new HttpHeaders()
-                        headers = headers
-                            .set("Authorization", `Bearer ${gapi.auth.getToken().access_token}`)
 
-                        http.get(
-                            "https://www.googleapis.com/drive/v3/files",
-                            {
-                                headers,
-                                observe: 'response',
-                                params:{
-                                    q:"mimeType = 'application/vnd.google-apps.folder'",
-                                    fields: 'files(id, starred,name)',
-                                    corpora:'allDrives'
-                                }
-                            }
-                        )
-                        .subscribe((result: any) => {
-                            console.log(result)
-
+                        getFields({
+                            fields:"files(iconLink)"
                         })
+
                     }
                     //
+
+                    //get a nested field for a file
+                        // use either commeneted
+                    if(environment.fields.nested){
+
+
+                        getFields({
+                            fields:"files(lastModifyingUser/displayName)"
+                            //  fields:"files(lastModifyingUser(displayName))"
+                        })
+
+                    }
+                    //
+
+                    //get a nested resources by itself
+                        // use either or
+                    if(environment.fields.group){
+
+
+                        getFields({
+                            // fields:"files(capabilities)"
+                            // fields:"files(capabilities/*)"
+                            fields:"files(capabilities(*))"
+                        })
+
+
+                    }
+
+                    //get multiple resources
+                        // use either or
+                    if(environment.fields.multiple){
+
+
+                        getFields({
+                            fields:"files(ownedByMe,hasThumbnail,capabilities(*))"
+                        })
+
+
+                    }
+                    //
+
+
+
+
 
 
                 })
@@ -121,11 +159,11 @@ export class SearchDirective {
     }
 
     ngOnInit() {
-        this.extras = this.search
+        this.extras = this.fields
         if (this.extras?.confirm === 'true') {
-            console.log(environment.search)
+            console.log(environment.fields)
             setTimeout(() => {
-                // this.el.nativeElement.click()
+                this.el.nativeElement.click()
             }, 200)
         }
     }
@@ -140,9 +178,6 @@ export class SearchDirective {
                 })
         }
     }
-
 }
-
-
 
 

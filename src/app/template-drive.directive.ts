@@ -7,9 +7,9 @@ import { environment } from '../../environments/environment'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Directive({
-    selector: '[appSearch]'
+    selector: '[appFields]'
 })
-export class SearchDirective {
+export class FieldsDirective {
 
     @Input() search: any;
     extras: any;
@@ -21,7 +21,9 @@ export class SearchDirective {
         private ryber: RyberService
     ) { }
 
+
     @HostListener('click') onClick() {
+
 
         if (this.extras?.confirm === 'true') {
 
@@ -34,12 +36,10 @@ export class SearchDirective {
             var SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
             //
 
-
             //scope access
             let http = this.http
             let ryber = this.ryber
             //
-
 
             // load the auth SDK
             gapi.load('client:auth2', () => {
@@ -58,55 +58,9 @@ export class SearchDirective {
                     //
 
 
-                    //get a list of all files
-                    if(environment.search.all){
 
-                        let headers = new HttpHeaders()
-                        headers = headers
-                            .set("Authorization", `Bearer ${gapi.auth.getToken().access_token}`)
 
-                        http.get(
-                            "https://www.googleapis.com/drive/v3/files",
-                            {
-                                headers,
-                                observe: 'response',
-                                params:{
-                                    fields:"files(parents,id,name)"
-                                }
-                            }
-                        )
-                        .subscribe((result: any) => {
-                            console.log(result.body)
 
-                        })
-                    }
-                    //
-
-                    //search for specific files or folders
-                    if(environment.search.query){
-
-                        let headers = new HttpHeaders()
-                        headers = headers
-                            .set("Authorization", `Bearer ${gapi.auth.getToken().access_token}`)
-
-                        http.get(
-                            "https://www.googleapis.com/drive/v3/files",
-                            {
-                                headers,
-                                observe: 'response',
-                                params:{
-                                    q:"mimeType = 'application/vnd.google-apps.folder'",
-                                    fields: 'files(id, starred,name)',
-                                    corpora:'allDrives'
-                                }
-                            }
-                        )
-                        .subscribe((result: any) => {
-                            console.log(result)
-
-                        })
-                    }
-                    //
 
 
                 })
@@ -121,7 +75,7 @@ export class SearchDirective {
     }
 
     ngOnInit() {
-        this.extras = this.search
+        this.extras = this.fields
         if (this.extras?.confirm === 'true') {
             console.log(environment.search)
             setTimeout(() => {
@@ -140,9 +94,4 @@ export class SearchDirective {
                 })
         }
     }
-
 }
-
-
-
-
