@@ -30,8 +30,8 @@ export const environment: any = {
 	},
 	googleDrive: {
 		// insert credentials here
-		apiKey: "AIzaSyAtQldOTKhcC8njFO_XiknHr3nyA9s3uhg",
-		clientId: "637621663480-5ojtpb099mvkick6gv9o8ba2tvdcdh2v.apps.googleusercontent.com"
+		apiKey: "AIzaSyCeD1-zP7oj2HE-iQkpP_7ldYvTs7VkoPI",
+		clientId: "637621663480-mhi4ivc3qi9d46t8k7bcg3lh0nn65ejb.apps.googleusercontent.com"
 		//
 	},
 	playground: {
@@ -153,7 +153,7 @@ export const environment: any = {
     lock:{
         create:false,
         delete:true
-    }
+    },
     //
 };
 
